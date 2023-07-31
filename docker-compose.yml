@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  db:
+    container_name: db
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+  app:
+    container_name: limeapi
+    build: .
+    image: limeapi
+    ports:
+      - "3000:3000"
+    environment:
+      DB_CONNECTION_URL: postgresql://postgres:admin@db:5432/postgres 
+      API_PORT: 3000
+      ETH_NODE_URL: https://goerli.infura.io/v3/09755767452a49d3a5b3f9b84d9db6c9
+      SECRET_KEY: verysecretkey
+    depends_on:
+      - db
+volumes:
+  postgres_data:
